@@ -101,14 +101,28 @@ function optionChanged() {
                     y: [0, 1]
                 },
                 value: demoInfo.wfreq,
-                title:{
+                title: {
                     text: "Belly Button Washing Frequency\nScrubs per Week"
                 },
                 type: "indicator",
-                mode: "gauge+number"
+                mode: "gauge+number",
+                gauge: {
+                    axis: {
+                        range: [null, 9],
+                        tickwidth: 1,
+                        nticks: 9,
+                        tick0: 0,
+                        dtick: 1,
+                        ticks: "inside",
+                        tickmode: "array",
+                        ticktext: ["0-1", "1-2", "2-3", "3-4", "4-5", "5-6", "6-7", "7-8", "8-9"],
+                        tickvals: ["0-1", "1-2", "2-3", "3-4", "4-5", "5-6", "6-7", "7-8", "8-9"]
+                        // tickcolor: 
+                    }
+                }
             }
         ];
-        
+
         var layout3 = {
             margin: {
                 t: 0, b: 0
