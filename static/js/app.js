@@ -36,31 +36,31 @@ function optionChanged() {
         var otuId = data.samples[nameIndex].otu_ids;
         // creates array of all OTU values of the test subject the user select
         var otuValue = data.samples[nameIndex].sample_values;
+        // creates array of all OTU labels of the test subject the user select
+        var otuLabels = data.samples[nameIndex].otu_labels;
 
-        // sorts the whole object from greatest to least according to the OTU values
-        var sortedValues = [data.samples[nameIndex]].sort((a, b) => b.sample_values - a.sample_values);
-        console.log(sortedValues);
+        // zips all 3 arrays above togethers
+        var zip = otuValue.map(function(e, i) {
+            return [e, otuId[i], otuLabels[i]];
+          });
 
-        // takes only the top ten values
-        // var sortedValuesTop = sortedValues.slice(0, 10);
-        // console.log(sortedValuesTop);
-
-        // Reverse the array to accommodate Plotly's defaults
-        // var valuesReversed = sortedValuesTop.reverse();
-        // console.log(valuesReversed);
+        // sorts zipped array from greatest to least OTU value
+        var sortedValues = zip.sort((a, b) => b[0] - a[0]);
+        // takes only the top OTU values 10 values
+        var sortedValuesTop = sortedValues.slice(0, 10);
 
         // takes just the OTU sample_values from dataset
-        xVals = sortedValues.map(object => object.sample_values)[0];
+        var xVals = sortedValuesTop.map(object => object[0]);
         // takes just the OTU ids from dataset
-        yValsInt = sortedValues.map(object => object.otu_ids)[0]
-        // converts items in array above into strings
-        yVals = yValsInt.map(String);
+        var yVals = sortedValuesTop.map(object => object[1]);
+        // takes just the OTU labels from dataset
+        var labels = sortedValuesTop.map(object => object[2]);
 
         // sets up data for horizontal bar chart
         var trace1 = {
             x: xVals,
             y: yVals,
-            text: sortedValues.map(object => object.otu_labels)[0],
+            text: labels,
             type: "bar",
             orientation: "h"
         };
@@ -107,7 +107,9 @@ function optionChanged() {
         // Define the plot layout
         var layout2 = {
             title: "All Operational Taxonomic Units (OTU) in Test Subject " + names[nameIndex] + "'s Belly Button",
-            showlegend: false
+            showlegend: false,
+            xaxis: { title: "OTU ID Number" },
+            yaxis: { title: "Amount Present" }
         };
 
         // Plot the chart to a div tag with id "bubble"
@@ -129,14 +131,12 @@ function optionChanged() {
                 gauge: {
                     axis: {
                         range: [null, 9],
-                        tickwidth: 1,
+                        tickwidth: 0,
                         nticks: 9,
                         tick0: 0,
                         dtick: 1,
                         ticks: "inside",
-                        tickmode: "array",
                         ticktext: ["0-1", "1-2", "2-3", "3-4", "4-5", "5-6", "6-7", "7-8", "8-9"],
-                        tickvals: ["0-1", "1-2", "2-3", "3-4", "4-5", "5-6", "6-7", "7-8", "8-9"]
                         // tickcolor: 
                     }
                 }
