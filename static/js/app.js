@@ -48,13 +48,15 @@ function optionChanged() {
         var sortedValues = zip.sort((a, b) => b[0] - a[0]);
         // takes only the top OTU values 10 values
         var sortedValuesTop = sortedValues.slice(0, 10);
+        var reversedValues = sortedValuesTop.reverse()
 
         // takes just the OTU sample_values from dataset
-        var xVals = sortedValuesTop.map(object => object[0]);
+        var xVals = reversedValues.map(object => object[0]);
         // takes just the OTU ids from dataset
-        var yVals = sortedValuesTop.map(object => object[1]);
+        var yValsList = reversedValues.map(object => object[1].toString());
+        var yVals = yValsList.map(item => "OTU " + item);
         // takes just the OTU labels from dataset
-        var labels = sortedValuesTop.map(object => object[2]);
+        var labels = reversedValues.map(object => object[2]);
 
         // sets up data for horizontal bar chart
         var trace1 = {
@@ -70,8 +72,8 @@ function optionChanged() {
 
         // Define the plot layout
         var layout1 = {
-            title: `Top 10 Operational Taxonomic Units (OTU) in Belly Button`,
-            xaxis: { title: "Amount" },
+            title: "Top 10 Operational Taxonomic Units (OTU)",
+            xaxis: { title: "Amount Present in Belly Button" },
             yaxis: { title: "OTU ID Number" }
         };
 
