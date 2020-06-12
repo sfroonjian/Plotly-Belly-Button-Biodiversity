@@ -69,18 +69,6 @@ d3.json("samples.json").then((data) => {
         // Plots the chart to a div tag with id "bar"
         Plotly.newPlot("bar", data1, layout1);
 
-        // colors = []
-        // r = 5
-        // g = 160
-        // b = 255
-        // for (var i = 0; i < names.length; i++) {
-        //     r += 1
-        //     g -= 1
-        //     b -= 1
-        //     colors.push("rgb(" + r + ", " + g + ", " + b + ")")
-        // }
-        // console.log(colors)
-
         // sets up data for bubble chart
         var trace2 = {
             x: otuId,
@@ -88,7 +76,8 @@ d3.json("samples.json").then((data) => {
             mode: 'markers',
             marker: {
                 gradient: "horizontal",
-                size: otuValue
+                size: otuValue,
+                color: otuValue
             }
         };
 
@@ -115,11 +104,21 @@ d3.json("samples.json").then((data) => {
                 },
                 value: demoInfo.wfreq,
                 title: {
-                    text: "Belly Button Washing Frequency\nScrubs per Week"
+                    text: "Belly Button Washing Frequency<br>Scrubs per Week"
                 },
                 type: "indicator",
                 mode: "gauge+number",
                 gauge: {
+                    steps: [
+                        {range: [0, 1], color: '#d73027'},
+                        {range: [1, 2], color: '#f46d43'},
+                        {range: [2, 3], color: '#fdae61'},
+                        {range: [3, 4], color: '#fee08b'},
+                        {range: [4, 5], color: '#ffffbf'},
+                        {range: [5, 6], color: '#d9ef8b'},
+                        {range: [6, 7],color: '#a6d96a'},
+                        {range: [7, 8], color: '#66bd63'},
+                        {range: [8, 9], color: '#1a9850'}],
                     axis: {
                         range: [null, 9],
                         tickwidth: 0,
@@ -127,8 +126,10 @@ d3.json("samples.json").then((data) => {
                         tick0: 0,
                         dtick: 1,
                         ticks: "inside",
-                        ticktext: ["0-1", "1-2", "2-3", "3-4", "4-5", "5-6", "6-7", "7-8", "8-9"],
-                        // tickcolor: 
+                    },
+                    bar: {
+                        color: "black",
+                        thickness: 0.3
                     }
                 }
             }
@@ -139,6 +140,9 @@ d3.json("samples.json").then((data) => {
             margin: {
                 t: 0, b: 0
             }
+            // coloraxis: {
+            //     colorscale: [[0, '#d73027'],[1, '#f46d43'],[2, '#fdae61'],[3,'#fee08b'],[4, '#ffffbf'],[5,'#d9ef8b'],[6,'#a6d96a'],[7,'#66bd63'],[8,'#1a9850']]
+            // }
         };
 
         // Plot the chart to a div tag with id "gauge"
@@ -155,21 +159,12 @@ d3.json("samples.json").then((data) => {
     init();
 });
 
-// whenever a change is made to the dropdown menu, the optionChanged function is called
-d3.selectAll("#selDataset").on("change", optionChanged);
-
-function optionChanged() {
-    // prevents the page from refreshing
-    d3.event.preventDefault();
+function optionChanged(value) {
 
     // loads data from json file
     d3.json("samples.json").then((data) => {
         // creates array of all names/ids
         var names = data.names;
-        // selects dropdown menu element
-        var dropdownMenu = d3.select("#selDataset");
-        // selects the value from menu that user selected
-        var value = dropdownMenu.property("value");
 
         // gets the index of the id that the user selected
         var nameIndex = names.indexOf(value)
@@ -209,14 +204,14 @@ function optionChanged() {
 
         var marker = {
             gradient: "horizontal",
-            size: otuValue
+            size: otuValue,
+            color: otuValue
         };
 
         // Re-Plots the bubble chart with updated values to a div tag with id "bubble"
         Plotly.restyle("bubble", "x", [otuId]);
         Plotly.restyle("bubble", "y", [otuValue]);
         Plotly.restyle("bubble", "marker", [marker]);
-
 
         // Re-Plots the gauage chart with update values to a div tag with id "gauge"
         Plotly.restyle("gauge", "value", demoInfo.wfreq)
