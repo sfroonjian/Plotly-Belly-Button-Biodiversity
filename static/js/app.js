@@ -1,48 +1,35 @@
 // loads data from json file
 d3.json("../samples.json").then((data) => {
 
-    // creates array of all names/ids
-    var names = data.names;
-
     // this function adds all names and values to the dropdown menu
-    function buildDropDown() {
+    function init() {
+        // creates array of all names/ids
+        var names = data.names;
         var menu = d3.select("#selDataset");
+
         for (var i = 0; i < names.length; i++) {
             menu.append("option").text(names[i]).property("value", names[i]);
         }
-    };
-    buildDropDown();
-})
 
-// whenever a change is made to the dropdown menu, the optionChanged function is called
-d3.selectAll("#selDataset").on("change", optionChanged);
-
-function optionChanged() {
-    // loads data from json file
-    d3.json("../samples.json").then((data) => {
         // creates array of all names/ids
         var names = data.names;
         // selects dropdown menu element
         var dropdownMenu = d3.select("#selDataset");
         // selects the value from menu that user selected
         var value = dropdownMenu.property("value");
-
-        // gets the index of the id that the user selected
-        var nameIndex = names.indexOf(value)
-
         // gets all the demegraphic info from the test subject the user select
-        var demoInfo = data.metadata[nameIndex];
+        var demoInfo = data.metadata[0];
         // creates array of all OTU ids of the test subject the user select
-        var otuId = data.samples[nameIndex].otu_ids;
+        var otuId = data.samples[0].otu_ids;
         // creates array of all OTU values of the test subject the user select
-        var otuValue = data.samples[nameIndex].sample_values;
+        var otuValue = data.samples[0].sample_values;
         // creates array of all OTU labels of the test subject the user select
-        var otuLabels = data.samples[nameIndex].otu_labels;
+        var otuLabels = data.samples[0].otu_labels;
 
         // zips all 3 arrays above togethers
-        var zip = otuValue.map(function(e, i) {
+        var zip = otuValue.map(function (e, i) {
             return [e, otuId[i], otuLabels[i]];
-          });
+        });
 
         // sorts zipped array from greatest to least OTU value
         var sortedValues = zip.sort((a, b) => b[0] - a[0]);
@@ -108,7 +95,7 @@ function optionChanged() {
 
         // Define the plot layout
         var layout2 = {
-            title: "All Operational Taxonomic Units (OTU) in Test Subject " + names[nameIndex] + "'s Belly Button",
+            title: "All Operational Taxonomic Units (OTU) in Test Subject " + names[0] + "'s Belly Button",
             showlegend: false,
             xaxis: { title: "OTU ID Number" },
             yaxis: { title: "Amount Present" }
@@ -154,6 +141,86 @@ function optionChanged() {
 
         // Plot the chart to a div tag with id "gauge"
         Plotly.newPlot('gauge', data3, layout3);
+
+        // gets the div tag with id "sample-metadata"
+        var info = d3.select("#sample-metadata");
+
+        // adds a paragraph to the div with appropiate information for each piece of demographic data
+        info.append("p").text("id: " + demoInfo.id);
+        info.append("p").text("ethnicity: " + demoInfo.ethnicity);
+        info.append("p").text("gender: " + demoInfo.gender);
+        info.append("p").text("age: " + demoInfo.age);
+        info.append("p").text("location: " + demoInfo.location);
+        info.append("p").text("bbtype: " + demoInfo.bbtype);
+        info.append("p").text("wfreq: " + demoInfo.wfreq);
+
+    };
+
+    init();
+});
+
+// whenever a change is made to the dropdown menu, the optionChanged function is called
+d3.selectAll("#selDataset").on("change", optionChanged);
+
+function optionChanged() {
+    // loads data from json file
+    d3.json("../samples.json").then((data) => {
+        // creates array of all names/ids
+        var names = data.names;
+        // selects dropdown menu element
+        var dropdownMenu = d3.select("#selDataset");
+        // selects the value from menu that user selected
+        var value = dropdownMenu.property("value");
+
+        // gets the index of the id that the user selected
+        var nameIndex = names.indexOf(value)
+
+        // gets all the demegraphic info from the test subject the user select
+        var demoInfo = data.metadata[nameIndex];
+        // creates array of all OTU ids of the test subject the user select
+        var otuId = data.samples[nameIndex].otu_ids;
+        // creates array of all OTU values of the test subject the user select
+        var otuValue = data.samples[nameIndex].sample_values;
+        // creates array of all OTU labels of the test subject the user select
+        var otuLabels = data.samples[nameIndex].otu_labels;
+
+        // zips all 3 arrays above togethers
+        var zip = otuValue.map(function (e, i) {
+            return [e, otuId[i], otuLabels[i]];
+        });
+
+        // sorts zipped array from greatest to least OTU value
+        var sortedValues = zip.sort((a, b) => b[0] - a[0]);
+        // takes only the top OTU values 10 values
+        var sortedValuesTop = sortedValues.slice(0, 10);
+        var reversedValues = sortedValuesTop.reverse()
+
+        // takes just the OTU sample_values from dataset
+        var xVals = reversedValues.map(object => object[0]);
+        // takes just the OTU ids from dataset
+        var yValsList = reversedValues.map(object => object[1].toString());
+        var yVals = yValsList.map(item => "OTU " + item);
+        // takes just the OTU labels from dataset
+        var labels = reversedValues.map(object => object[2]);
+
+        // Re-Plot the bar chart with new values to a div tag with id "bar"
+        Plotly.restyle("bar", "x", [xVals]);
+        Plotly.restyle("bar", "y", [yVals]);
+        Plotly.restyle("bar", "text", [labels]);
+
+        var marker = {
+            gradient: "horizontal",
+            size: otuValue
+        };
+
+        // Re-Plot the chart with updated values to a div tag with id "bubble"
+        Plotly.restyle("bubble", "x", [otuId]);
+        Plotly.restyle("bubble", "y", [otuValue]);
+        Plotly.restyle("bubble", "marker", [marker]);
+
+
+        // Re-Plots the chart with update values to a div tag with id "gauge"
+        Plotly.restyle("gauge", "value", demoInfo.wfreq)
 
         // gets the div tag with id "sample-metadata"
         var info = d3.select("#sample-metadata");
