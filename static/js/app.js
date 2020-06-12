@@ -1,5 +1,5 @@
 // loads data from json file
-d3.json("../samples.json").then((data) => {
+d3.json("samples.json").then((data) => {
 
     // this function adds all names and values to the dropdown menu
     function init() {
@@ -164,7 +164,7 @@ d3.selectAll("#selDataset").on("change", optionChanged);
 
 function optionChanged() {
     // loads data from json file
-    d3.json("../samples.json").then((data) => {
+    d3.json("samples.json").then((data) => {
         // creates array of all names/ids
         var names = data.names;
         // selects dropdown menu element
