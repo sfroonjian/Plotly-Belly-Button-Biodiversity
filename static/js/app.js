@@ -5,8 +5,10 @@ d3.json("samples.json").then((data) => {
     function init() {
         // creates array of all names/ids
         var names = data.names;
+        // selects the dropdown menu
         var menu = d3.select("#selDataset");
 
+        // adds the id of each test subject to the dropdown menu and adds the value as the same number
         for (var i = 0; i < names.length; i++) {
             menu.append("option").text(names[i]).property("value", names[i]);
         }
@@ -64,7 +66,7 @@ d3.json("samples.json").then((data) => {
             yaxis: { title: "OTU ID Number" }
         };
 
-        // Plot the chart to a div tag with id "bar"
+        // Plots the chart to a div tag with id "bar"
         Plotly.newPlot("bar", data1, layout1);
 
         // colors = []
@@ -95,7 +97,7 @@ d3.json("samples.json").then((data) => {
 
         // Define the plot layout
         var layout2 = {
-            title: "All Operational Taxonomic Units (OTU) in Test Subject " + names[0] + "'s Belly Button",
+            title: "All Operational Taxonomic Units (OTU) in Test Subject's Belly Button",
             showlegend: false,
             xaxis: { title: "OTU ID Number" },
             yaxis: { title: "Amount Present" }
@@ -146,13 +148,7 @@ d3.json("samples.json").then((data) => {
         var info = d3.select("#sample-metadata");
 
         // adds a paragraph to the div with appropiate information for each piece of demographic data
-        info.append("p").text("id: " + demoInfo.id);
-        info.append("p").text("ethnicity: " + demoInfo.ethnicity);
-        info.append("p").text("gender: " + demoInfo.gender);
-        info.append("p").text("age: " + demoInfo.age);
-        info.append("p").text("location: " + demoInfo.location);
-        info.append("p").text("bbtype: " + demoInfo.bbtype);
-        info.append("p").text("wfreq: " + demoInfo.wfreq);
+        Object.entries(demoInfo).forEach(([key, value]) => info.append("p").text(key + ": " + value));
 
     };
 
@@ -163,6 +159,9 @@ d3.json("samples.json").then((data) => {
 d3.selectAll("#selDataset").on("change", optionChanged);
 
 function optionChanged() {
+    // prevents the page from refreshing
+    d3.event.preventDefault();
+
     // loads data from json file
     d3.json("samples.json").then((data) => {
         // creates array of all names/ids
@@ -203,7 +202,7 @@ function optionChanged() {
         // takes just the OTU labels from dataset
         var labels = reversedValues.map(object => object[2]);
 
-        // Re-Plot the bar chart with new values to a div tag with id "bar"
+        // Re-Plots the bar chart with new values to a div tag with id "bar"
         Plotly.restyle("bar", "x", [xVals]);
         Plotly.restyle("bar", "y", [yVals]);
         Plotly.restyle("bar", "text", [labels]);
@@ -213,13 +212,13 @@ function optionChanged() {
             size: otuValue
         };
 
-        // Re-Plot the chart with updated values to a div tag with id "bubble"
+        // Re-Plots the bubble chart with updated values to a div tag with id "bubble"
         Plotly.restyle("bubble", "x", [otuId]);
         Plotly.restyle("bubble", "y", [otuValue]);
         Plotly.restyle("bubble", "marker", [marker]);
 
 
-        // Re-Plots the chart with update values to a div tag with id "gauge"
+        // Re-Plots the gauage chart with update values to a div tag with id "gauge"
         Plotly.restyle("gauge", "value", demoInfo.wfreq)
 
         // gets the div tag with id "sample-metadata"
@@ -227,13 +226,9 @@ function optionChanged() {
 
         // clears out html in div every time a new ID is selected
         info.html("");
+
         // adds a paragraph to the div with appropiate information for each piece of demographic data
-        info.append("p").text("id: " + demoInfo.id);
-        info.append("p").text("ethnicity: " + demoInfo.ethnicity);
-        info.append("p").text("gender: " + demoInfo.gender);
-        info.append("p").text("age: " + demoInfo.age);
-        info.append("p").text("location: " + demoInfo.location);
-        info.append("p").text("bbtype: " + demoInfo.bbtype);
-        info.append("p").text("wfreq: " + demoInfo.wfreq);
+        Object.entries(demoInfo).forEach(([key, value]) => info.append("p").text(key + ": " + value));
+
     });
 };
