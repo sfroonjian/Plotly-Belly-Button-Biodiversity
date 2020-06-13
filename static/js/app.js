@@ -62,7 +62,7 @@ d3.json("samples.json").then((data) => {
         // Define the plot layout
         var layout1 = {
             title: "Top 10 Operational Taxonomic Units (OTU)",
-            xaxis: { title: "Amount Present in Belly Button" },
+            xaxis: { title: "Abundance in Belly Button" },
             yaxis: { title: "OTU ID Number" }
         };
 
@@ -89,7 +89,7 @@ d3.json("samples.json").then((data) => {
             title: "All Operational Taxonomic Units (OTU) in Test Subject's Belly Button",
             showlegend: false,
             xaxis: { title: "OTU ID Number" },
-            yaxis: { title: "Amount Present" }
+            yaxis: { title: "Abundance" }
         };
 
         // Plot the chart to a div tag with id "bubble"
