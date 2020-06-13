@@ -1,6 +1,8 @@
 ### Purpose of analysis:
 The purpose of this project is to create a single HTML dashboard where users can select different test subjects from a dropdown list to see various charts displaying data on that subject's belly betton. This was created using Javascript, D3.js, Plotly, HTML, CSS, and Bootstrap.
 
+---
+
 ### How to run the code:
 **First Option**
 1. Save all files of repository (except the files in the screenshots folder) to a folder on your computer.
@@ -14,9 +16,13 @@ The purpose of this project is to create a single HTML dashboard where users can
 **Second Option:**
 1. View page from Github Pages at: [https://sfroonjian.github.io/Plotly-Belly-Button-Biodiversity/](https://sfroonjian.github.io/Plotly-Belly-Button-Biodiversity/)
 
+---
+
 ### Data collected:
 ![](screenshots/screenshot1.png)
 ![](screenshots/screenshot2.png)
+
+---
 
 ### Why the data is displayed this way:
 The data for each test subject is displayed in several different ways so the user can quickly and easily view various information about them:
