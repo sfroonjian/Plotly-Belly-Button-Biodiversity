@@ -1,5 +1,5 @@
 ### Purpose of analysis:
-The purpose of this project is to create a single HTML dashboard where users can select different test subjects from a dropdown list to see various charts displaying data on that subject's belly betton. This was created using Javascript, D3.js, Plotly, HTML, CSS, and Bootstrap.
+The purpose of this project is to create a single HTML dashboard where users can select different test subjects from a dropdown list to see various charts displaying data on that subject's belly betton. This was done by importing data from a json file into a Javascript file using D3.js. Both D3 and Plotly were then used to generate the charts and connect them to the HTML page. Lastly, CSS and Bootstrap were used to design the layout of the page.
 
 ---
 
